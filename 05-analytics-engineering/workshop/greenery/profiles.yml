@@ -1,0 +1,42 @@
+greenery:
+
+  outputs:
+    dbt_zkan:
+      type: postgres
+      threads: 1
+      host: localhost
+      port: 5432
+      user: postgres
+      pass: "{{ env_var('DBT_ENV_SECRET_PG_PASSWORD') }}"
+      dbname: greenery
+      schema: dbt_zkan
+
+    prod:
+      type: postgres
+      threads: 1
+      host: localhost
+      port: 5432
+      user: postgres
+      pass: "{{ env_var('DBT_ENV_SECRET_PG_PASSWORD') }}"
+      dbname: greenery
+      schema: prod
+
+    dbt_zaim_bigquery:
+      type: bigquery
+      method: service-account
+      project: deb2-2100001-395008 #dataengineercafe
+      dataset: dbt_zaim
+      threads: 1
+      keyfile: deb2-de2-analytics-engineering-with-dbt-2100001-395008-a00f1bbc614c.json
+      location: asia-southeast1
+
+    prod_bigquery:
+      type: bigquery
+      method: service-account
+      project: dataengineercafe
+      dataset: deb_bootcamp
+      threads: 1
+      keyfile: /workspaces/data-engineering-bootcamp/00-bootcamp-project/services/YOUR-KEYFILE.json
+      location: asia-southeast1
+
+  target: dbt_zaim_bigquery
