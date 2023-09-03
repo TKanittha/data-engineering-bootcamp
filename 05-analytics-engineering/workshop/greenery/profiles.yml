@@ -25,18 +25,19 @@ greenery:
       type: bigquery
       method: service-account
       project: deb2-2100001-395008 #dataengineercafe
-      dataset: dbt_zaim
+      dataset: dbt_zaim #dataset-destination that dbt will transfer to.
       threads: 1
       keyfile: deb2-de2-analytics-engineering-with-dbt-2100001-395008-a00f1bbc614c.json
       location: asia-southeast1
 
+    #actually, we should use different keyfile to govern
     prod_bigquery:
       type: bigquery
       method: service-account
-      project: dataengineercafe
-      dataset: deb_bootcamp
+      project: deb2-2100001-395008 #dataengineercafe
+      dataset: prod #deb_bootcamp
       threads: 1
-      keyfile: /workspaces/data-engineering-bootcamp/00-bootcamp-project/services/YOUR-KEYFILE.json
+      keyfile: deb2-de2-analytics-engineering-with-dbt-2100001-395008-a00f1bbc614c.json #/workspaces/data-engineering-bootcamp/00-bootcamp-project/services/YOUR-KEYFILE.json
       location: asia-southeast1
 
   target: dbt_zaim_bigquery

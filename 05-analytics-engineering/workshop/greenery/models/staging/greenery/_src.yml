@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: greenery
+    schema: my_deb_workshop #it's deb_bootcamp (bigquery dataset (as a dataloader source)) dbt_zaim 
+    database: deb2-2100001-395008 #project_id
+
+    tables:
+      - name: users
+        description: Greenery users
+      - name: events
+        description: Greenery events
+      - name: orders
+        description: Greenery orders
+      - name: addresses
+        description: Greenery addresses

@@ -22,7 +22,7 @@ client = bigquery.Client(
     project=project_id,
     credentials=credentials,
 )
-dataset_name = "my_deb_workshop"
+dataset_name = "deb2_bootcamp_200001"
 
 #define function
 def fn_write_log(table_id, table):

@@ -1,0 +1,4 @@
+#to add the add-on package to support dbt
+packages:
+  - package: calogica/dbt_expectations
+    version: 0.8.5

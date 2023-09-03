@@ -35,3 +35,16 @@ models:
     # Config indicated by + and applies to all files under models/example/
     example:
       +materialized: view
+    staging:
+      # +materialized: views
+      +schema: staging #suffix with this one (it will concat('_', name))
+    # or
+    # schema: staging
+    #   greenery:
+    #      +materialized: view
+    #   skooldio:
+    #      +materialized: view
+    #   skooldio:
+    #      +materialized: view
+    marts:
+      +schema: mart

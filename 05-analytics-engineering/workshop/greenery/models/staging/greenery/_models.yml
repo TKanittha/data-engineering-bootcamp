@@ -1,0 +1,47 @@
+version: 2
+
+models:
+
+  - name: stg_greenery__orders #my_users
+    description: Greenery orders
+    columns:
+      - name: order_guid
+        description: Orders ID
+
+  - name: stg_greenery__addresses #my_users
+    description: Greenery addresses
+    columns:
+      - name: address_guid
+        description: Address ID
+
+  - name: stg_greenery__users #my_users
+    description: Greenery users
+    columns:
+      - name: user_id
+        description: User ID
+
+  - name: my_events
+    description: Greenery events
+    columns:
+      - name: event_id
+        description: Event ID
+        tests:
+          - not_null
+          - unique
+          - dbt_expectations.expect_column_to_exist #add test cases by using the greate_expectation pkg
+          - dbt_expectations.expect_column_values_to_be_unique
+      - name: event_type
+        description: Event Type
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type: #specifics case per columns
+              column_type: string
+          - accepted_values:
+              values: ['page_view', 'add_to_cart', 'checkout', 'package_shipped']
+      - name: user
+        description: User ID
+
+        # we can test the below case when we apply the back-fill in the airflow (completed the scheme)
+        # tests:
+        #   - relationships:
+        #       to: ref('users')
+        #       field: user_id
