@@ -1,10 +1,11 @@
 import csv
 import configparser
 
-import psycopg2
+import psycopg2 #lib to access postgres db
 
 
 parser = configparser.ConfigParser()
+# set config name which maintain usr/pwd/api key.
 parser.read("pipeline.conf")
 dbname = parser.get("postgres_config", "database")
 user = parser.get("postgres_config", "username")
@@ -20,6 +21,10 @@ DATA_FOLDER = "data"
 
 table = "addresses"
 header = ["address_id", "address", "zipcode", "state", "country"]
+# in python, open -> but don't check that folder/file 
+# w = write if not found, it'll auto create
+# w+ = append if not found, error
+# normally, we don't write the code to create folder w/i the script bc. we've to use bash / find lib to create folder in sys
 with open(f"{DATA_FOLDER}/addresses.csv", "w") as f:
     writer = csv.writer(f)
     writer.writerow(header)
@@ -35,7 +40,8 @@ table = "order_items"
 header = ["order_id", "product_id", "quantity"]
 # ลองดึงข้อมูลจากตาราง order_items และเขียนลงไฟล์ CSV
 # YOUR CODE HERE
-with open(f"{DATA_FOLDER}/order_items.csv", "w") as f:
+
+with open(f"{DATA_FOLDER}/{table}.csv", "w") as f:
     writer = csv.writer(f)
     writer.writerow(header)
 

@@ -183,3 +183,5 @@ pyrightconfig.json
 
 # DEB Workshop
 de-lifecycle
+00-bootcamp-project/pipeline.conf
+00-bootcamp-project/poetry.lock
