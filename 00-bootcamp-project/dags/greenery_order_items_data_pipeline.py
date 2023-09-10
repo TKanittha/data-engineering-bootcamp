@@ -10,6 +10,19 @@ from google.cloud import bigquery, storage
 from google.oauth2 import service_account
 
 
+# kanithak - config
+import configparser # to load config
+
+parser = configparser.ConfigParser()
+# set config name which maintain usr/pwd/api key.
+parser.read("./pipeline.conf")
+project_id = parser.get("airflow_config", "project_id")
+dataset_name = parser.get("airflow_config", "dataset_name")
+credential = parser.get("airflow_config", "credential")
+bucket_gcs = parser.get("airflow_config", "bucket_name")
+credential_gcs_to_bigquery = parser.get("airflow_config", "credential_gcs_to_bigquery")
+
+
 BUSINESS_DOMAIN = "greenery"
 LOCATION = "asia-southeast1"
 PROJECT_ID = "dataengineercafe"
