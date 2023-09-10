@@ -185,3 +185,10 @@ pyrightconfig.json
 de-lifecycle
 00-bootcamp-project/pipeline.conf
 00-bootcamp-project/poetry.lock
+00-bootcamp-project/service_account/deb2-loading-data-to-bigquery-deb2-2100001-6bd9fda41270.json
+00-bootcamp-project/service_account/admin/deb2-loading-data-to-bigquery-deb2-2100001-6bd9fda41270.json
+00-bootcamp-project/service_account/admin/deb2-loading-files-to-gcs-deb2-2100001-4fcec53ec646.json
+.gitignore
+.gitignore
+00-bootcamp-project/service_account/privillege/deb2-loading-data-to-gcs-then-bigquery-deb2-2100001-e7460d652b66.json
+00-bootcamp-project/service_account/privillege/deb2-loading-files-to-gcs-deb2-2100001-4fcec53ec646.json

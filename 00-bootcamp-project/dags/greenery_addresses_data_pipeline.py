@@ -10,9 +10,21 @@ from google.cloud import bigquery, storage
 from google.oauth2 import service_account
 
 
+# kanithak - config
+import configparser # to load config
+
+parser = configparser.ConfigParser()
+# set config name which maintain usr/pwd/api key.
+parser.read("./pipeline.conf")
+project_id = parser.get("airflow_config", "project_id")
+dataset_name = parser.get("airflow_config", "dataset_name")
+credential = parser.get("airflow_config", "credential")
+bucket_gcs = parser.get("airflow_config", "bucket_name")
+credential_gcs_to_bigquery = parser.get("airflow_config", "credential_gcs_to_bigquery")
+
 BUSINESS_DOMAIN = "greenery"
 LOCATION = "asia-southeast1"
-PROJECT_ID = "dataengineercafe"
+PROJECT_ID = f"{project_id}"
 DAGS_FOLDER = "/opt/airflow/dags"
 DATA = "addresses"
 
@@ -44,14 +56,14 @@ def _extract_data():
 
 
 def _load_data_to_gcs(ds):
-    keyfile_gcs = f"{DAGS_FOLDER}/dataengineercafe-deb2-loading-files-to-gcs-509ec0e91d64.json"
+    keyfile_gcs = f"{credential}" #f"{DAGS_FOLDER}/dataengineercafe-deb2-loading-files-to-gcs-509ec0e91d64.json"
     service_account_info_gcs = json.load(open(keyfile_gcs))
     credentials_gcs = service_account.Credentials.from_service_account_info(
         service_account_info_gcs
     )
 
     # Load data from Local to GCS
-    bucket_name = "deb2-bootcamp-200031999"
+    bucket_name = f"{bucket_gcs}"
     storage_client = storage.Client(
         project=PROJECT_ID,
         credentials=credentials_gcs,
@@ -65,7 +77,7 @@ def _load_data_to_gcs(ds):
 
 
 def _load_data_from_gcs_to_bigquery():
-    keyfile_bigquery = f"{DAGS_FOLDER}/dataengineercafe-deb2-gcs-to-bigquery-906983b6ae02.json"
+    keyfile_bigquery = f"{credential_gcs_to_bigquery}" #f"{DAGS_FOLDER}/dataengineercafe-deb2-gcs-to-bigquery-906983b6ae02.json"
     service_account_info_bigquery = json.load(open(keyfile_bigquery))
     credentials_bigquery = service_account.Credentials.from_service_account_info(
         service_account_info_bigquery
@@ -85,7 +97,7 @@ def _load_data_from_gcs_to_bigquery():
         autodetect=True,
     )
 
-    bucket_name = "deb2-bootcamp-200031999"
+    bucket_name = f"{bucket_gcs}"
     destination_blob_name = f"{BUSINESS_DOMAIN}/{DATA}/{DATA}.csv"
     job = bigquery_client.load_table_from_uri(
         f"gs://{bucket_name}/{destination_blob_name}",

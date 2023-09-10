@@ -4,27 +4,39 @@ import os
 from google.cloud import bigquery, storage
 from google.oauth2 import service_account
 
+# kanithak - config
+import configparser # to load config
+
+parser = configparser.ConfigParser()
+# set config name which maintain usr/pwd/api key.
+parser.read("pipeline.conf")
+project_id = parser.get("gcs_admin_config", "project_id")
+dataset_name = parser.get("gcs_admin_config", "dataset_name")
+credential = parser.get("gcs_admin_config", "credential")
+bucket = parser.get("gcs_admin_config", "bucket_name")
+credential_gcs_to_bigquery = parser.get("gcs_admin_config", "credential_gcs_to_bigquery")
+
 
 DATA_FOLDER = "data"
 BUSINESS_DOMAIN = "greenery"
-location = "asia-southeast1"
+location = "asia-southeast1" #ห้ามใส่ข้าม region
 
 # Prepare and Load Credentials to Connect to GCP Services
-keyfile_gcs = "dataengineercafe-deb2-loading-files-to-gcs-509ec0e91d64.json"
+keyfile_gcs = f"{credential}"
 service_account_info_gcs = json.load(open(keyfile_gcs))
 credentials_gcs = service_account.Credentials.from_service_account_info(
     service_account_info_gcs
 )
 
-keyfile_bigquery = "dataengineercafe-deb2-gcs-to-bigquery-906983b6ae02.json"
+keyfile_bigquery = f"{credential_gcs_to_bigquery}"
 service_account_info_bigquery = json.load(open(keyfile_bigquery))
 credentials_bigquery = service_account.Credentials.from_service_account_info(
     service_account_info_bigquery
 )
 
-project_id = "dataengineercafe"
+project_id = f"{project_id}"
 
-bucket_name = "deb2-bootcamp-200031999"
+bucket_name = f"{bucket}"
 storage_client = storage.Client(
     project=project_id,
     credentials=credentials_gcs,
@@ -195,7 +207,7 @@ blob = bucket.blob(destination_blob_name)
 blob.upload_from_filename(file_path)
 
 # Load data from GCS to BigQuery
-table_id = f"{project_id}.deb_bootcamp.{data}${partition}"
+table_id = f"{project_id}.deb_bootcamp.{data}${partition}" #partition decorator ${partition}
 job_config = bigquery.LoadJobConfig(
     skip_leading_rows=1,
     write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,

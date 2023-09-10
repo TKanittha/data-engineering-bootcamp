@@ -4,14 +4,24 @@ import os
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
+# kanithak - config
+import configparser # to load config
 
+parser = configparser.ConfigParser()
+# set config name which maintain usr/pwd/api key.
+parser.read("pipeline.conf")
+project_id = parser.get("bigquery_admin_config", "project_id")
+dataset_name = parser.get("bigquery_admin_config", "dataset_name")
+credential = parser.get("bigquery_admin_config", "credential")
+
+# bootcamp area
 DATA_FOLDER = "data"
 
 # keyfile = os.environ.get("KEYFILE_PATH")
-keyfile = "dataengineercafe-deb2-loading-data-to-bigquery-86b4c17fd6c6.json"
+keyfile = f"{credential}"
 service_account_info = json.load(open(keyfile))
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
-project_id = "dataengineercafe"
+project_id = f"{project_id}"
 client = bigquery.Client(
     project=project_id,
     credentials=credentials,
@@ -28,7 +38,7 @@ job_config = bigquery.LoadJobConfig(
 data = "addresses"
 file_path = f"{DATA_FOLDER}/{data}.csv"
 with open(file_path, "rb") as f:
-    table_id = f"{project_id}.deb_bootcamp.{data}"
+    table_id = f"{project_id}.{dataset_name}.{data}"
     job = client.load_table_from_file(f, table_id, job_config=job_config)
     job.result()
 
@@ -52,7 +62,7 @@ partition = dt.replace("-", "")
 data = "events"
 file_path = f"{DATA_FOLDER}/{data}.csv"
 with open(file_path, "rb") as f:
-    table_id = f"{project_id}.deb_bootcamp.{data}${partition}"
+    table_id = f"{project_id}.{dataset_name}.{data}${partition}"
     job = client.load_table_from_file(f, table_id, job_config=job_config)
     job.result()
 
@@ -70,36 +80,36 @@ job_config = bigquery.LoadJobConfig(
 data = "order_items"
 file_path = f"{DATA_FOLDER}/{data}.csv"
 with open(file_path, "rb") as f:
-    table_id = f"{project_id}.deb_bootcamp.{data}"
+    table_id = f"{project_id}.{dataset_name}.{data}"
     job = client.load_table_from_file(f, table_id, job_config=job_config)
     job.result()
 
 table = client.get_table(table_id)
 print(f"Loaded {table.num_rows} rows and {len(table.schema)} columns to {table_id}")
 
-# Orders
-job_config = bigquery.LoadJobConfig(
-    skip_leading_rows=1,
-    write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
-    source_format=bigquery.SourceFormat.CSV,
-    autodetect=True,
-    time_partitioning=bigquery.TimePartitioning(
-        type_=bigquery.TimePartitioningType.DAY,
-        field="created_at",
-    ),
-)
+# # Orders
+# job_config = bigquery.LoadJobConfig(
+#     skip_leading_rows=1,
+#     write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
+#     source_format=bigquery.SourceFormat.CSV,
+#     autodetect=True,
+#     time_partitioning=bigquery.TimePartitioning(
+#         type_=bigquery.TimePartitioningType.DAY,
+#         field="created_at",
+#     ),
+# )
 
-dt = "2021-02-10"
-partition = dt.replace("-", "")
-data = "orders"
-file_path = f"{DATA_FOLDER}/{data}.csv"
-with open(file_path, "rb") as f:
-    table_id = f"{project_id}.deb_bootcamp.{data}${partition}"
-    job = client.load_table_from_file(f, table_id, job_config=job_config)
-    job.result()
+# dt = "2021-02-10"
+# partition = dt.replace("-", "")
+# data = "orders"
+# file_path = f"{DATA_FOLDER}/{data}.csv"
+# with open(file_path, "rb") as f:
+#     table_id = f"{project_id}.{dataset_name}.{data}${partition}"
+#     job = client.load_table_from_file(f, table_id, job_config=job_config)
+#     job.result()
 
-table = client.get_table(table_id)
-print(f"Loaded {table.num_rows} rows and {len(table.schema)} columns to {table_id}")
+# table = client.get_table(table_id)
+# print(f"Loaded {table.num_rows} rows and {len(table.schema)} columns to {table_id}")
 
 # Products
 job_config = bigquery.LoadJobConfig(
@@ -112,7 +122,7 @@ job_config = bigquery.LoadJobConfig(
 data = "products"
 file_path = f"{DATA_FOLDER}/{data}.csv"
 with open(file_path, "rb") as f:
-    table_id = f"{project_id}.deb_bootcamp.{data}"
+    table_id = f"{project_id}.{dataset_name}.{data}"
     job = client.load_table_from_file(f, table_id, job_config=job_config)
     job.result()
 
@@ -130,7 +140,7 @@ job_config = bigquery.LoadJobConfig(
 data = "promos"
 file_path = f"{DATA_FOLDER}/{data}.csv"
 with open(file_path, "rb") as f:
-    table_id = f"{project_id}.deb_bootcamp.{data}"
+    table_id = f"{project_id}.{dataset_name}.{data}"
     job = client.load_table_from_file(f, table_id, job_config=job_config)
     job.result()
 
@@ -155,7 +165,7 @@ partition = dt.replace("-", "")
 data = "users"
 file_path = f"{DATA_FOLDER}/{data}.csv"
 with open(file_path, "rb") as f:
-    table_id = f"{project_id}.deb_bootcamp.{data}${partition}"
+    table_id = f"{project_id}.{dataset_name}.{data}${partition}"
     job = client.load_table_from_file(f, table_id, job_config=job_config)
     job.result()
 
